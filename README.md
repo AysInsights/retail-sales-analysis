@@ -52,4 +52,4 @@ Asagida layihe uzre hazirlanmis interaktiv Excel dashboardunun goruntusu teqdim 
 
 ## Muellif
 
-**Aysel | 2026**
+**Ays | 2026**
