@@ -1,112 +1,328 @@
--- Lesson 13 | SQL Practice
--- Oracle HR Schema | hr.employees
---
--- Practice queries written during Lesson 13.
+-- Dərs 13 | SQL Praktikaları
+-- Oracle HR sxemi | hr.employees
+-- Praktika 1 və Praktika 2
 
--- Task 1
-select *
-FROM hr.EMPLOYEES
+
+-- =====================================================
+-- Tapşırıq 1
+-- hr.employees cədvəlindən bütün sütunları göstərin.
+-- İlk 10 sətri göstərin.
+-- =====================================================
+
+SELECT *
+FROM hr.employees
 FETCH FIRST 10 ROWS ONLY;
 
--- Task 2
-select first_name, last_name, Salary
-FROM hr.EMPLOYEES;
 
--- Task 3
-select first_name, last_name, salary
-FROM hr.EMPLOYEES
+-- =====================================================
+-- Tapşırıq 2
+-- Yalnız first_name, last_name və salary sütunlarını gətirin.
+-- =====================================================
+
+SELECT first_name,
+       last_name,
+       salary
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 3
+-- Maaşı 10000-dən çox olan işçiləri tapın.
+-- =====================================================
+
+SELECT first_name,
+       last_name,
+       salary
+FROM hr.employees
 WHERE salary > 10000;
 
--- Task 4
-select first_name, last_name
-FROM hr.EMPLOYEES
-WHERE DEPARTMENT_ID = 60;
 
--- Task 5
-select first_name
-FROM hr.EMPLOYEES
-WHERE first_name like 's%';
+-- =====================================================
+-- Tapşırıq 4
+-- 60-cı şöbədə (IT) işləyənləri göstərin.
+-- =====================================================
 
--- Task 6
-select first_name, last_name, salary
-FROM hr.EMPLOYEES
-WHERE Salary between 5000
-  AND 10000;
+SELECT first_name,
+       last_name
+FROM hr.employees
+WHERE department_id = 60;
 
--- Task 7
-select first_name, last_name, salary
-FROM hr.EMPLOYEES
-ORDER BY Salary desc;
 
--- Task 8
-select first_name, last_name, salary, DEPARTMENT_ID
-FROM hr.EMPLOYEES
-ORDER BY salary desc, DEPARTMENT_ID desc;
+-- =====================================================
+-- Tapşırıq 5
+-- Adı 'S' hərfi ilə başlayan işçiləri tapın.
+-- =====================================================
 
--- Task 9
-select distinct DEPARTMENT_ID
-FROM hr.EMPLOYEES --select count(distinct DEPARTMENT_ID)
-FROM hr.EMPLOYEES;
+SELECT first_name
+FROM hr.employees
+WHERE first_name LIKE 's%';
 
--- Task 10
-select first_name || ' ' || last_name AS "Tam Ad"
-FROM hr.EMPLOYEES;
 
--- Task 11
-select first_name, last_name, salary * 12 AS "Illik Gelir"
-FROM hr.EMPLOYEES;
+-- =====================================================
+-- Tapşırıq 6
+-- Maaşı 5000 ilə 10000 arasında olan işçiləri tapın.
+-- =====================================================
 
--- Task 12
-select first_name, last_name
-FROM hr.EMPLOYEES
-WHERE manager_id is Null;
+SELECT first_name,
+       last_name,
+       salary
+FROM hr.employees
+WHERE salary BETWEEN 5000 AND 10000;
 
--- Task 13
-select FIRST_NAME, LAST_NAME, NVL(COMMISSION_PCT,0) AS komissiya
-FROM hr.EMPLOYEES;
 
--- Task 14
-select FIRST_NAME, LAST_NAME, salary + salary*NVL(COMMISSION_PCT,0) AS "Umumi Gelir"
-FROM hr.EMPLOYEES;
+-- =====================================================
+-- Tapşırıq 7
+-- İşçiləri maaşa görə azalan sırada göstərin.
+-- =====================================================
 
--- Task 15
-select FIRST_NAME || ' ' || LAST_NAME AS "Ad,Soyad", NVL2(COMMISSION_PCT,'Komissiyali','Komissiyasiz')AS "Komissiya"
-FROM hr.EMPLOYEES;
+SELECT first_name,
+       last_name,
+       salary
+FROM hr.employees
+ORDER BY salary DESC;
 
--- Task 16
-select FIRST_NAME, LAST_NAME, NVL2(MANAGER_ID,'Rehber var','Rehber yoxdu')AS "Manager Status"
-FROM hr.EMPLOYEES;
 
--- Task 17
-select FIRST_NAME, LAST_NAME, COMMISSION_PCT, NVL(COMMISSION_PCT,0) AS "NVL", COALESCE(COMMISSION_PCT,0) AS "COALESCE"
-FROM hr.EMPLOYEES;
+-- =====================================================
+-- Tapşırıq 8
+-- Əvvəl maaşa, sonra şöbəyə görə sıralayın.
+-- =====================================================
 
--- Task 18
-select count(*)
-FROM hr.EMPLOYEES
-WHERE COMMISSION_PCT is NOT NULL;
+SELECT first_name,
+       last_name,
+       salary,
+       department_id
+FROM hr.employees
+ORDER BY salary DESC,
+         department_id DESC;
 
--- Task 19
-select FIRST_NAME, LAST_NAME, salary, CASE when salary >= 15000 THEN 'Yuksek' when salary >= 8000 THEN 'Orta' Else 'Asagi' END Kateqoriya
-FROM hr.EMPLOYEES;
 
--- Task 20
-select DEPARTMENT_ID, LAST_NAME || ' ' || FIRST_NAME Ad_Soyad, CASE DEPARTMENT_ID when 10 THEn 'Admin' when 60 then 'IT' when 80 then 'Satis' else 'Basqa' END Sobe
-FROM hr.EMPLOYEES;
+-- =====================================================
+-- Tapşırıq 9
+-- Neçə fərqli department_id olduğunu tapın.
+-- =====================================================
 
--- Task 21
-select DEPARTMENT_ID, last_name || ' ' || first_name Tam_Ad, decode(DEPARTMENT_ID, 10, 'Admin', 60, 'IT', 80, 'Satis', 'Basqa') as Kateqoriya
-FROM hr.EMPLOYEES;
+SELECT DISTINCT department_id
+FROM hr.employees;
 
--- Task 22
-select first_name || ' ' || last_name Tam_Ad, CASE when HIRE_DATE < Date '2015-01-01' then 'Kohne isci' else ' ' end zemanetli
-FROM hr.EMPLOYEES;
+-- Alternativ:
+-- SELECT COUNT(DISTINCT department_id)
+-- FROM hr.employees;
 
--- Task 23
-select first_name || ' ' || last_name As_Soyad, Case when DEPARTMENT_ID=10 then case when salary >= 15000 then 'Admin - Yuksek' when salary >= 8000 then 'Admin - Orta' else 'Admin - Asagi' end when DEPARTMENT_ID=60 then case when salary >= 15000 then 'IT - Yuksek' when salary >= 8000 then 'IT - Orta' else 'IT - Asagi' end when DEPARTMENT_ID=80 then case when salary >= 15000 then 'Satis - Yuksek' when salary >= 8000 then 'Satis - Orta' else 'Satis - Asagi' end else 'basqa' end tesnifat
-FROM hr.EMPLOYEES;
 
--- Task 24
-select first_name, last_name, salary, COMMISSION_PCT, salary+salary*nvl(COMMISSION_PCT,0) Yekun_Maas, case when salary + salary * NVL(commission_pct, 0) >= 15000 then 'yuksek' when salary + salary * NVL(commission_pct, 0) >= 8000 then 'orta' else 'asagi' end tesnifat
-FROM hr.EMPLOYEES
-ORDER BY Yekun_Maas desc;
+-- =====================================================
+-- Tapşırıq 10
+-- Ad və soyadı birləşdirib "Tam Ad" adlandırın.
+-- =====================================================
+
+SELECT first_name || ' ' || last_name AS "Tam Ad"
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 11
+-- İllik maaş sütunu yaradın: salary * 12
+-- =====================================================
+
+SELECT first_name,
+       last_name,
+       salary * 12 AS "Illik Gelir"
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 12
+-- Rəhbəri olmayan işçiləri tapın.
+-- =====================================================
+
+SELECT first_name,
+       last_name
+FROM hr.employees
+WHERE manager_id IS NULL;
+
+
+-- =====================================================
+-- Tapşırıq 13
+-- commission_pct NULL olanları 0 ilə əvəz edin.
+-- =====================================================
+
+SELECT first_name,
+       last_name,
+       NVL(commission_pct, 0) AS komissiya
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 14
+-- Ümumi gəlir sütunu yaradın:
+-- salary + salary * NVL(commission_pct, 0)
+-- =====================================================
+
+SELECT first_name,
+       last_name,
+       salary + salary * NVL(commission_pct, 0) AS "Umumi Gelir"
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 15
+-- NVL2 ilə işçini "Komissiyali" / "Komissiyasiz"
+-- kimi göstərin.
+-- =====================================================
+
+SELECT first_name || ' ' || last_name AS "Ad,Soyad",
+       NVL2(commission_pct, 'Komissiyali', 'Komissiyasiz') AS "Komissiya"
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 16
+-- manager_id NULL olduqda "Rehber yoxdu",
+-- NULL olmadıqda "Rehber var" yazdırın.
+-- =====================================================
+
+SELECT first_name,
+       last_name,
+       NVL2(manager_id, 'Rehber var', 'Rehber yoxdu') AS "Manager Status"
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 17
+-- NVL və COALESCE funksiyalarını müqayisə edin.
+-- =====================================================
+
+SELECT first_name,
+       last_name,
+       commission_pct,
+       NVL(commission_pct, 0) AS "NVL",
+       COALESCE(commission_pct, 0) AS "COALESCE"
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 18
+-- Komissiyası olan neçə işçi olduğunu tapın.
+-- =====================================================
+
+SELECT COUNT(*)
+FROM hr.employees
+WHERE commission_pct IS NOT NULL;
+
+
+-- =====================================================
+-- Tapşırıq 19
+-- Maaşa görə kateqoriya yaradın:
+-- 15000 və yuxarı → Yüksək
+-- 8000 və yuxarı → Orta
+-- Qalanlar → Aşağı
+-- =====================================================
+
+SELECT first_name,
+       last_name,
+       salary,
+       CASE
+           WHEN salary >= 15000 THEN 'Yuksek'
+           WHEN salary >= 8000 THEN 'Orta'
+           ELSE 'Asagi'
+       END AS Kateqoriya
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 20
+-- CASE ilə şöbə adı yaradın:
+-- 10 → Admin, 60 → IT, 80 → Satis, digərləri → Basqa
+-- =====================================================
+
+SELECT department_id,
+       last_name || ' ' || first_name AS Ad_Soyad,
+       CASE department_id
+           WHEN 10 THEN 'Admin'
+           WHEN 60 THEN 'IT'
+           WHEN 80 THEN 'Satis'
+           ELSE 'Basqa'
+       END AS Sobe
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 21
+-- Tapşırıq 20-dəki eyni nəticəni DECODE ilə yazın.
+-- =====================================================
+
+SELECT department_id,
+       last_name || ' ' || first_name AS Tam_Ad,
+       DECODE(department_id,
+              10, 'Admin',
+              60, 'IT',
+              80, 'Satis',
+              'Basqa') AS Kateqoriya
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 22
+-- hire_date 2005-dən əvvəl olduqda "Kohne isci" yazdırın.
+--
+-- Qeyd: HR datasında uyğun nəticəni görmək üçün praktikada
+-- tarix 2015-01-01 olaraq istifadə edilmişdir.
+-- =====================================================
+
+SELECT first_name || ' ' || last_name AS Tam_Ad,
+       CASE
+           WHEN hire_date < DATE '2015-01-01' THEN 'Kohne isci'
+           ELSE ' '
+       END AS zemanetli
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 23
+-- İç-içə CASE istifadə edin:
+-- şöbə və maaş səviyyəsinə görə təsnifat yaradın.
+-- =====================================================
+
+SELECT first_name || ' ' || last_name AS As_Soyad,
+       CASE
+           WHEN department_id = 10 THEN
+               CASE
+                   WHEN salary >= 15000 THEN 'Admin - Yuksek'
+                   WHEN salary >= 8000 THEN 'Admin - Orta'
+                   ELSE 'Admin - Asagi'
+               END
+           WHEN department_id = 60 THEN
+               CASE
+                   WHEN salary >= 15000 THEN 'IT - Yuksek'
+                   WHEN salary >= 8000 THEN 'IT - Orta'
+                   ELSE 'IT - Asagi'
+               END
+           WHEN department_id = 80 THEN
+               CASE
+                   WHEN salary >= 15000 THEN 'Satis - Yuksek'
+                   WHEN salary >= 8000 THEN 'Satis - Orta'
+                   ELSE 'Satis - Asagi'
+               END
+           ELSE 'basqa'
+       END AS tesnifat
+FROM hr.employees;
+
+
+-- =====================================================
+-- Tapşırıq 24
+-- NVL və CASE-i birlikdə istifadə edin:
+-- NULL commission_pct də nəzərə alınmaqla yekun maaşı
+-- hesablayın və yekun maaşa görə kateqoriya yaradın.
+-- =====================================================
+
+SELECT first_name,
+       last_name,
+       salary,
+       commission_pct,
+       salary + salary * NVL(commission_pct, 0) AS Yekun_Maas,
+       CASE
+           WHEN salary + salary * NVL(commission_pct, 0) >= 15000 THEN 'yuksek'
+           WHEN salary + salary * NVL(commission_pct, 0) >= 8000 THEN 'orta'
+           ELSE 'asagi'
+       END AS tesnifat
+FROM hr.employees
+ORDER BY Yekun_Maas DESC;
